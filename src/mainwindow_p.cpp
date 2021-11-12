@@ -236,7 +236,7 @@ MainWindowPrivate::MainWindowPrivate(QStringList tests, bool reset, MainWindow* 
 	{
 		if (QRegExp(text).isValid())
 		{
-			testCaseProxyModel->setFilterRegExp(text);
+			testCaseProxyModel->setFilterRegularExpression(text);
 			if(testCaseProxyModel->rowCount())
 			{
 				testCaseTreeView->expandAll();
@@ -501,28 +501,29 @@ void MainWindowPrivate::runTestInThread(const QString& pathToTest, bool notify)
 		int progress = 0;
 
 		// when the process finished, read any remaining output then quit the loop
-		connect(&testProcess, static_cast<void (QProcess::*)(int)>(&QProcess::finished), &loop, [&, pathToTest]
-		{
-			QString output = testProcess.readAllStandardOutput();
-			if(testProcess.exitStatus() == QProcess::NormalExit)
-			{
-				output.append("\nTEST RUN COMPLETED: " + QDateTime::currentDateTime().toString("yyyy-MMM-dd hh:mm:ss.zzz") + "\n\n");
-				emit testResultsReady(pathToTest, notify);
-			}
-			else
-			{
-				output.append("\nTEST RUN EXITED WITH ERRORS: " + QDateTime::currentDateTime().toString("yyyy-MMM-dd hh:mm:ss.zzz") + "\n\n");
-				executableModel->setData(executableModel->index(pathToTest), ExecutableData::NOT_RUNNING, QExecutableModel::StateRole);
-			}
-			
-			emit testOutputReady(output);
-			emit testProgress(pathToTest, 0, 0);
+		connect(&testProcess, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), &loop, [&, pathToTest]
+				{
+					QString output = testProcess.readAllStandardOutput();
+					if (testProcess.exitStatus() == QProcess::NormalExit)
+					{
+						output.append("\nTEST RUN COMPLETED: " + QDateTime::currentDateTime().toString("yyyy-MMM-dd hh:mm:ss.zzz") + "\n\n");
+						emit testResultsReady(pathToTest, notify);
+					}
+					else
+					{
+						output.append("\nTEST RUN EXITED WITH ERRORS: " + QDateTime::currentDateTime().toString("yyyy-MMM-dd hh:mm:ss.zzz") + "\n\n");
+						executableModel->setData(executableModel->index(pathToTest), ExecutableData::NOT_RUNNING, QExecutableModel::StateRole);
+					}
 
-			testRunningHash[pathToTest] = false;
-			threadKillCv.notify_one();
+					emit testOutputReady(output);
+					emit testProgress(pathToTest, 0, 0);
 
-			loop.exit();
-		}, Qt::QueuedConnection);
+					testRunningHash[pathToTest] = false;
+					threadKillCv.notify_one();
+
+					loop.exit();
+				},
+				Qt::QueuedConnection);
 
 		// get killed if asked to do so
 		connect(this, &MainWindowPrivate::killTest, &loop, [&, pathToTest]
@@ -704,7 +705,7 @@ void MainWindowPrivate::selectTest(const QString& testPath)
 	delete failureProxyModel->sourceModel();
 	testCaseTreeView->setSortingEnabled(false);
 	testCaseProxyModel->setSourceModel(new GTestModel(testResultsHash[testPath]));
-	failureProxyModel->clear();
+	failureProxyModel->removeRows(0, failureProxyModel->rowCount(), QModelIndex());
 	testCaseTreeView->setSortingEnabled(true);
 	testCaseTreeView->expandAll();
 	
@@ -1035,11 +1036,11 @@ void MainWindowPrivate::createTestMenu()
 	addTestAction = new QAction(QIcon(":/images/green"), "Add Test...", q);
 	selectAndRemoveTestAction = new QAction(q->style()->standardIcon(QStyle::SP_TrashIcon), "Remove Test...", testMenu);
 	selectAndRunTest = new QAction(q->style()->standardIcon(QStyle::SP_BrowserReload), "Run Test...", testMenu);
-	selectAndRunTest->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_F5));
+	selectAndRunTest->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_F5));
 	selectAndRunAllTest = new QAction(q->style()->standardIcon(QStyle::SP_BrowserReload), "Run All Test...", testMenu);
-	selectAndRunAllTest->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F5));
+	selectAndRunAllTest->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_F5));
 	selectAndKillTest = new QAction(q->style()->standardIcon(QStyle::SP_DialogCloseButton), "Kill Test...", testMenu);
-	selectAndKillTest->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F5));
+	selectAndKillTest->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_F5));
 
 	testMenu->addAction(addTestAction);
 	testMenu->addAction(selectAndRemoveTestAction);

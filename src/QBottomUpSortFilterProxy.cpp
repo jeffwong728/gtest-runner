@@ -21,7 +21,7 @@ QBottomUpSortFilterProxy::~QBottomUpSortFilterProxy()
 // --------------------------------------------------------------------------------
 bool QBottomUpSortFilterProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-	bool iAmAccepted = sourceModel()->data(sourceParent, Qt::DisplayRole).toString().contains(filterRegExp());
+	bool iAmAccepted = sourceModel()->data(sourceParent, Qt::DisplayRole).toString().contains(filterRegularExpression());
 	std::string debug = sourceModel()->data(sourceParent, Qt::DisplayRole).toString().toStdString();
 	return (filterAcceptsDescendant(sourceRow, sourceParent) || filterAcceptsAncestor(sourceParent));
 	return true;
@@ -47,7 +47,7 @@ bool QBottomUpSortFilterProxy::filterAcceptsDescendant(int sourceRow, const QMod
 		}
 	}
 
-	return  sourceModel()->data(rowToTest).toString().contains(filterRegExp());
+	return sourceModel()->data(rowToTest).toString().contains(filterRegularExpression());
 }
 // --------------------------------------------------------------------------------
 // 	FUNCTION: filterAcceptsAncestor (public )
@@ -66,5 +66,5 @@ bool QBottomUpSortFilterProxy::filterAcceptsAncestor(const QModelIndex &sourceIn
 			return true;
 	}
 
-	return sourceModel()->data(sourceIndex).toString().contains(filterRegExp());
+	return sourceModel()->data(sourceIndex).toString().contains(filterRegularExpression());
 }

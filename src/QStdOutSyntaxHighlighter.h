@@ -43,6 +43,7 @@
 #include <QSyntaxHighlighter>
 #include <QTextEdit>
 #include <QColor>
+#include <QtCore5Compat/qregexp.h>
 
 //	----------------------------------------------------------------------------
 //	CLASS		QStdOutSyntaxHighlighter

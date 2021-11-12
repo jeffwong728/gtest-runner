@@ -375,12 +375,12 @@ public:
 		return tree.child_count(parent) > 0;
 	}
 
-	virtual QList<QModelIndex> children(const QModelIndex& index) const
+	virtual QList<QModelIndex> children(const QModelIndex& idx) const
 	{
 		QList<QModelIndex> list;
-		for (int i = 0; i < rowCount(index); i++)
+		for (int i = 0; i < rowCount(idx); i++)
 		{
-			list << index.child(i, 0);
+			list << index(i, 0, idx);
 		}
 		return list;
 	}

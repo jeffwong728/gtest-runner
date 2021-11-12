@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"thread": "cpp",
+			"chrono": "cpp",
+			"qtxml": "cpp",
+			"qapplication": "cpp",
+			"qdialog": "cpp",
+			"algorithm": "cpp",
+			"array": "cpp",
+			"functional": "cpp",
+			"iterator": "cpp",
+			"numeric": "cpp",
+			"tuple": "cpp",
+			"utility": "cpp",
+			"variant": "cpp",
+			"xiosbase": "cpp",
+			"xutility": "cpp",
+			"xstring": "cpp"
+		}
+	}
+}

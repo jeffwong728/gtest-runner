@@ -1,0 +1,11 @@
+{
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "cmake.configureSettings": {
+      "CMAKE_TOOLCHAIN_FILE": "D:/laserx/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "CMAKE_VERBOSE_MAKEFILE" : true
+    },
+    "cmake.preferredGenerators": ["Ninja"],
+    "cmake.platform": "x64",
+    "cmake.buildDirectory" : "${workspaceRoot}/build/${buildType}",
+    "cmake.configureOnOpen": true
+}

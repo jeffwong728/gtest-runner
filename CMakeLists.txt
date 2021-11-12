@@ -3,7 +3,7 @@
 #-------------------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 2.8.12)
-set(QT_MINIMUM_VERSION 5.3.0)
+set(QT_MINIMUM_VERSION 6.2.0)
 
 #-------------------------------------------------------------------------------
 #	PROJECT SETTINGS
@@ -60,12 +60,12 @@ set(QTDIR $ENV{QTDIR} CACHE STRING "Qt install path")
 list(APPEND CMAKE_PREFIX_PATH ${QTDIR})
 
 # Find the necessary Qt5 modules
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Xml REQUIRED)
-find_package(Qt5XmlPatterns REQUIRED)
-find_package(Qt5Test REQUIRED)
+find_package(Qt6Core REQUIRED)
+find_package(Qt6Gui REQUIRED)
+find_package(Qt6Widgets REQUIRED)
+find_package(Qt6Xml REQUIRED)
+find_package(Qt6Test REQUIRED)
+find_package(Qt6Core5Compat REQUIRED)
 
 # Test for supported Qt version
 find_program(QMAKE_EXECUTABLE NAMES qmake HINTS ${QTDIR} ENV QTDIR PATH_SUFFIXES bin)
@@ -108,7 +108,7 @@ configure_file(src/appinfo.h.in appinfo.h @ONLY NEWLINE_STYLE UNIX)
 #	SOURCE CODE
 #-------------------------------------------------------------------------------
 
-qt5_wrap_ui(UI_HDRS
+qt_wrap_ui(UI_HDRS
 src/qtfindreplacedialog/findreplacedialog.ui
 src/qtfindreplacedialog/findreplaceform.ui
 )
@@ -178,7 +178,7 @@ list(APPEND QT_RESOURCES
 	resources/resources.qrc
 )
 
-qt5_add_resources(RESOURCES ${QT_RESOURCES})
+qt_add_resources(RESOURCES ${QT_RESOURCES})
 
 list(APPEND RESOURCES
 	resources/resources.rc
@@ -208,12 +208,12 @@ list(REMOVE_DUPLICATES INCLUDE_DIRS)
 #-------------------------------------------------------------------------------
 
 list(APPEND LIBRARIES
-Qt5::Core
-Qt5::Gui
-Qt5::Widgets
-Qt5::Xml
-Qt5::XmlPatterns
-Qt5::Test
+Qt::Core
+Qt::Gui
+Qt::Widgets
+Qt::Xml
+Qt::Test
+Qt::Core5Compat
 Threads::Threads
 )
 

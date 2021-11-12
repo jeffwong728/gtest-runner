@@ -1,7 +1,7 @@
 
 #include "mainwindow_p.h"
 
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QFileInfo>
@@ -77,8 +77,7 @@ void MainWindow::changeEvent(QEvent *e)
 //--------------------------------------------------------------------------------------------------
 QSize MainWindow::sizeHint() const
 {
-	QDesktopWidget* desktop = QApplication::desktop();
-	return 0.5 * desktop->screen(desktop->primaryScreen())->size();
+	return QSize(800, 600);
 }
 
 //--------------------------------------------------------------------------------------------------
